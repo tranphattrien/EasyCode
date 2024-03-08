@@ -1,5 +1,11 @@
+import Navbar from "./components/navbar.component";
+
 const App = () => {
-  return <h1>Easy Code Blogging website by modern web</h1>;
+  return (
+    <>
+      <Navbar />
+    </>
+  );
 };
 
 export default App;
