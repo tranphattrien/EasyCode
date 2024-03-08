@@ -10,10 +10,8 @@ export default function Navbar() {
   };
   return (
     <nav className="navbar">
-      <Link to="/" className="flex-none w-10">
-        {/* <img src={logo} alt="EasyCode Logo" className="w-full" /> */}
+      <Link to="/" className="flex-none">
         <svg
-          className="mr-10"
           xmlns="http://www.w3.org/2000/svg"
           version="1.0"
           width="100.000000pt"
@@ -41,19 +39,18 @@ export default function Navbar() {
             <path d="M3930 625 l0 -145 155 0 155 0 0 50 0 50 -126 0 c-114 0 -125 -2 -122 -17 3 -16 18 -18 111 -21 80 -2 107 -6 104 -15 -2 -8 -38 -12 -123 -12 l-119 0 -3 108 -3 107 126 0 c104 0 125 -2 125 -15 0 -12 -19 -15 -110 -15 l-110 0 0 -45 0 -45 95 0 c78 0 95 3 95 15 0 12 -15 15 -75 15 -60 0 -75 3 -75 15 0 12 18 15 105 15 l105 0 0 50 0 50 -155 0 -155 0 0 -145z" />
           </g>
         </svg>
-        {/* <h1>EasyCode</h1> */}
       </Link>
 
       <div
         className={
-          "absolute bg-white w-full left-0 top-full mt-0.5 border-b border-grey py-4 px-[5vw] md:border-0 md:block md:relative md:inset-0 md:left-28 md:p-0 md:w-auto md:show " +
+          "absolute bg-white w-full left-0 top-full mt-0.5 border-b border-grey py-4 px-[5vw] md:border-0 md:block md:relative md:inset-0 md:p-0 md:w-auto md:show " +
           (searchBoxVisibility ? "show" : "hide")
         }
       >
         <input
           type="text"
           placeholder="Search"
-          className=" w-full md:w-auto bg-grey p-4 pl-6 pr-[12%] md:pr-6 md:pl-12 rounded-full placeholder:text-dark-grey outline-none"
+          className=" w-full md:w-[200px] lg:w-auto bg-grey p-4 pl-6 pr-[12%] md:pr-6 md:pl-12 rounded-full placeholder:text-dark-grey outline-none"
         />
 
         <i className="fi fi-rr-search absolute right-[10%] md:pointer-events-none md:left-5 top-1/2 -translate-y-1/2 text-xl text-dark-grey"></i>
