@@ -33,6 +33,11 @@ export default function Navbar() {
   const handleUserNavPanel = () => {
     setUserNavPanel((currentVal) => !currentVal);
   };
+  useEffect(() => {
+    if (!access_token) {
+      setUserNavPanel(false);
+    }
+  }, [access_token]);
   return (
     <>
       <nav className="navbar">
