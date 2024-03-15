@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import logo from "../imgs/logo.png";
 import { Link, Outlet } from "react-router-dom";
 import { useUserContext } from "../../context/user-context";
@@ -8,20 +8,30 @@ export default function Navbar() {
   const [searchBoxVisibility, setSetBoxVisibility] = useState(false);
   const [userNavPanel, setUserNavPanel] = useState(false);
   const { userAuth } = useUserContext();
+  const userNavRef = useRef(null);
 
   const access_token = userAuth?.user?.access_token;
   const profile_img = userAuth?.user?.profile_img;
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userNavRef.current && !userNavRef.current.contains(event.target)) {
+        setUserNavPanel(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   const handleSearchBoxVisibility = () => {
     setSetBoxVisibility((currentVal) => !currentVal);
   };
   const handleUserNavPanel = () => {
     setUserNavPanel((currentVal) => !currentVal);
-  };
-  const handleBlur = () => {
-    setTimeout(() => {
-      setUserNavPanel(false);
-    }, 200);
   };
   return (
     <>
@@ -92,12 +102,8 @@ export default function Navbar() {
                 </button>
               </Link>
 
-              <div className="relative">
-                <button
-                  className="w-12 h-12 mt-1"
-                  onClick={handleUserNavPanel}
-                  onBlur={handleBlur}
-                >
+              <div className="relative" ref={userNavRef}>
+                <button className="w-12 h-12 mt-1" onClick={handleUserNavPanel}>
                   <img
                     src={profile_img}
                     alt="avatar_user"
