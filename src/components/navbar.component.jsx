@@ -13,7 +13,18 @@ export default function Navbar() {
   const access_token = userAuth?.user?.access_token;
   const profile_img = userAuth?.user?.profile_img;
 
+  const handleSearchBoxVisibility = () => {
+    setSetBoxVisibility((currentVal) => !currentVal);
+  };
+  const handleUserNavPanel = () => {
+    setUserNavPanel((currentVal) => !currentVal);
+  };
+
   useEffect(() => {
+    if (!access_token) {
+      setUserNavPanel(false);
+    }
+
     const handleClickOutside = (event) => {
       if (userNavRef.current && !userNavRef.current.contains(event.target)) {
         setUserNavPanel(false);
@@ -25,18 +36,6 @@ export default function Navbar() {
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
-  }, []);
-
-  const handleSearchBoxVisibility = () => {
-    setSetBoxVisibility((currentVal) => !currentVal);
-  };
-  const handleUserNavPanel = () => {
-    setUserNavPanel((currentVal) => !currentVal);
-  };
-  useEffect(() => {
-    if (!access_token) {
-      setUserNavPanel(false);
-    }
   }, [access_token]);
   return (
     <>
