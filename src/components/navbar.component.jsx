@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import logo from "../imgs/logo.png";
 import { Link, Outlet } from "react-router-dom";
 import { useUserContext } from "../../context/user-context";
 import UserNavigationPanel from "./user-navigation.component";
