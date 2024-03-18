@@ -23,10 +23,20 @@ export default function BlogEditor() {
         });
     }
   };
+  const handleTitleKeyDown = (e) => {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+    }
+  };
+  const handleTitleChange = (e) => {
+    let input = e.target;
+    input.style.height = "auto";
+    input.style.height = input.scrollHeight + "px";
+  };
   return (
     <>
       <nav className="navbar">
-        <Link to="/" className="flex-none w-10">
+        <Link to="/" className="flex-none">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             version="1.0"
@@ -55,7 +65,6 @@ export default function BlogEditor() {
               <path d="M3930 625 l0 -145 155 0 155 0 0 50 0 50 -126 0 c-114 0 -125 -2 -122 -17 3 -16 18 -18 111 -21 80 -2 107 -6 104 -15 -2 -8 -38 -12 -123 -12 l-119 0 -3 108 -3 107 126 0 c104 0 125 -2 125 -15 0 -12 -19 -15 -110 -15 l-110 0 0 -45 0 -45 95 0 c78 0 95 3 95 15 0 12 -15 15 -75 15 -60 0 -75 3 -75 15 0 12 18 15 105 15 l105 0 0 50 0 50 -155 0 -155 0 0 -145z" />
             </g>
           </svg>
-          {/* <img src={logo} alt="" srcset="" /> */}
         </Link>
         <p className="max-md:hidden text-black line-clamp-1 w-full">New Blog</p>
 
@@ -85,6 +94,12 @@ export default function BlogEditor() {
                 />
               </label>
             </div>
+            <textarea
+              placeholder="Blog Title"
+              className="text-4xl font-medium w-full h-20 outline-none resize-none mt-10 leading-tight placeholder:opacity-80"
+              onKeyDown={handleTitleKeyDown}
+              onChange={handleTitleChange}
+            ></textarea>
           </div>
         </section>
       </AnimationWrapper>
