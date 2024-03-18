@@ -4,18 +4,23 @@ import AnimationWrapper from "../common/page-animation";
 import defaultBanner from "../imgs/blog banner.png";
 import { uploadImage } from "../common/upload_img";
 import toast, { Toaster } from "react-hot-toast";
+import { useEditorContext } from "../pages/editor";
 export default function BlogEditor() {
-  const blogBannerRef = useRef();
+  const {
+    blog,
+    blog: { title, banner, content, tags, des },
+    setBlog
+  } = useEditorContext();
+  console.log(blog);
   const handleBannerUpload = (e) => {
     const img = e.target.files[0];
-
     if (img) {
       let loadingToast = toast.loading("Uploading...");
       uploadImage(img)
         .then((imageUrl) => {
-          blogBannerRef.current.src = imageUrl;
           toast.dismiss(loadingToast);
           loadingToast = toast.success("Uploaded success!");
+          setBlog({ ...blog, banner: imageUrl });
         })
         .catch((error) => {
           toast.dismiss(loadingToast);
@@ -32,6 +37,7 @@ export default function BlogEditor() {
     let input = e.target;
     input.style.height = "auto";
     input.style.height = input.scrollHeight + "px";
+    setBlog({ ...blog, title: input.value });
   };
   return (
     <>
@@ -66,7 +72,9 @@ export default function BlogEditor() {
             </g>
           </svg>
         </Link>
-        <p className="max-md:hidden text-black line-clamp-1 w-full">New Blog</p>
+        <p className="max-md:hidden text-black line-clamp-1 w-full">
+          {title.length ? title : "New Blog"}
+        </p>
 
         <div className="flex gap-4 ml-auto">
           <button className="btn-dark py-2">Publish</button>
@@ -80,8 +88,7 @@ export default function BlogEditor() {
             <div className="relative aspect-video bg-white border-4 border-grey hover:opacity-80 ">
               <label htmlFor="uploadBanner">
                 <img
-                  ref={blogBannerRef}
-                  src={defaultBanner}
+                  src={banner.length ? banner : defaultBanner}
                   alt="Default Banner"
                   className="z-20 hover:cursor-pointer"
                 />
@@ -99,7 +106,8 @@ export default function BlogEditor() {
               className="text-4xl font-medium w-full h-20 outline-none resize-none mt-10 leading-tight placeholder:opacity-80"
               onKeyDown={handleTitleKeyDown}
               onChange={handleTitleChange}
-            ></textarea>
+            />
+            <hr className="w-full opacity-10" />
           </div>
         </section>
       </AnimationWrapper>
