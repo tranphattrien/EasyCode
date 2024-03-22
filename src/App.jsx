@@ -3,6 +3,8 @@ import Navbar from "./components/navbar.component";
 import UserAuthForm from "./pages/userAuthForm";
 import UserContextProvider from "../context/user-context";
 import Editor from "./pages/editor";
+import Activation from "./pages/Activation";
+
 const App = () => {
   return (
     <UserContextProvider>
@@ -12,6 +14,7 @@ const App = () => {
           <Route path="signup" element={<UserAuthForm type="signup" />}></Route>
         </Route>
         <Route path="/editor" element={<Editor />} />
+        <Route path="/activation" element={<Activation />} />
       </Routes>
     </UserContextProvider>
   );

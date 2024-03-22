@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import AnimationWrapper from "../common/page-animation";
-import defaultBanner from "../imgs/blog banner.png";
+import defaultBanner from "../Assets/imgs/blog banner.png";
 import { uploadImage } from "../common/upload_img";
 import toast, { Toaster } from "react-hot-toast";
 import { useEditorContext } from "../pages/editor";
