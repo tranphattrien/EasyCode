@@ -8,22 +8,24 @@ import { useEditorContext } from "../pages/editor";
 import EditorJS from "@editorjs/editorjs";
 import { tools } from "./tools.component";
 export default function BlogEditor() {
-  const {
+  let {
     blog,
     blog: { title, banner, content, tags, des },
-    setBlog
+    setBlog,
+    textEditor,
+    setTextEditor,
+    setEditorState
   } = useEditorContext();
 
-  let editor = { isReady: false };
   useEffect(() => {
-    if (!editor.isReady) {
-      editor = new EditorJS({
+    setTextEditor(
+      new EditorJS({
         holder: "textEditor",
-        data: "",
+        data: content,
         tools: tools,
         placeholder: "Let's write an awesome story"
-      });
-    }
+      })
+    );
   }, []);
 
   const handleBannerUpload = (e) => {
@@ -52,6 +54,32 @@ export default function BlogEditor() {
     input.style.height = "auto";
     input.style.height = input.scrollHeight + "px";
     setBlog({ ...blog, title: input.value });
+  };
+
+  const handlePublishEvent = () => {
+    if (!banner.length) {
+      return toast.error("Upload a blog banner to publish it !");
+    }
+
+    if (!title.length) {
+      return toast.error("Write blog title to publish it !");
+    }
+
+    if (textEditor.isReady) {
+      textEditor
+        .save()
+        .then((data) => {
+          if (data.blocks.length) {
+            setBlog({ ...blog, content: data });
+            setEditorState("publish");
+          } else {
+            return toast.error("Write something in your blog to publish it !");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
   return (
     <>
@@ -91,7 +119,9 @@ export default function BlogEditor() {
         </p>
 
         <div className="flex gap-4 ml-auto">
-          <button className="btn-dark py-2">Publish</button>
+          <button className="btn-dark py-2" onClick={handlePublishEvent}>
+            Publish
+          </button>
           <button className="btn-light py-2">Save Draft</button>
         </div>
       </nav>
@@ -116,6 +146,7 @@ export default function BlogEditor() {
               </label>
             </div>
             <textarea
+              defaultValue={title}
               placeholder="Blog Title"
               className="text-4xl font-medium w-full h-20 outline-none resize-none mt-10 leading-tight placeholder:opacity-80"
               onKeyDown={handleTitleKeyDown}
