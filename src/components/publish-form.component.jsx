@@ -3,32 +3,43 @@ import { useEditorContext } from "../pages/editor";
 import AnimationWrapper from "../common/page-animation";
 import toast, { Toaster } from "react-hot-toast";
 import Tag from "./tags.component";
+import axios from "axios";
+import { useUserContext } from "../../context/user-context";
+import { useNavigate } from "react-router-dom";
 
 export default function PublishForm() {
+  const navigate = useNavigate();
+  const { userAuth, setUserAuth } = useUserContext();
+  const access_token = userAuth?.user?.access_token;
   const characterLimit = 200;
   const tagLimit = 10;
   let {
     blog,
-    blog: { banner, title, tags, des },
+    blog: { banner, title, tags, des, content },
     setEditorState,
     setBlog
   } = useEditorContext();
+
   const handleCloseEvent = () => {
     setEditorState("editor");
   };
+
   const handleBlogTitleChange = (e) => {
     let input = e.target;
     setBlog({ ...blog, title: input.value });
   };
+
   const handleBlogDesChange = (e) => {
     let input = e.target;
     setBlog({ ...blog, des: input.value });
   };
+
   const handleDesKeyDown = (e) => {
     if (e.keyCode == 13) {
       e.preventDefault();
     }
   };
+
   const handleTagKeyDown = (e) => {
     if (e.keyCode == 13 || e.keyCode == 188) {
       e.preventDefault();
@@ -44,6 +55,62 @@ export default function PublishForm() {
       e.target.value = "";
     }
   };
+
+  const handlePublishBlog = (e) => {
+    if (e.target.className.includes("disable")) {
+      return;
+    }
+
+    if (!title.length) {
+      return toast.error("Write blog title before publishing !");
+    }
+
+    if (!des.length || des.length > characterLimit) {
+      return toast.error(
+        `Write a description about your blog withing ${characterLimit} characters to publishing !`
+      );
+    }
+
+    if (!tags.length) {
+      return toast.error("Enter at least 1 tag to help us rank your blog !");
+    }
+
+    let loadingToast = toast.loading("Publishing...");
+
+    e.target.classList.add("disable");
+
+    let blogObj = {
+      title,
+      banner,
+      des,
+      content,
+      tags,
+      draft: false
+    };
+
+    axios
+      .post(import.meta.env.VITE_SERVER_DOMAIN + "/create-blog", blogObj, {
+        headers: {
+          Authorization: `Bearer ${access_token}`
+        }
+      })
+      .then(() => {
+        e.target.classList.remove("disable");
+        toast.dismiss(loadingToast);
+        toast.success("Publish blog successfully !");
+
+        setTimeout(() => {
+          navigate("/");
+        }, 500);
+      })
+      .catch(({ response }) => {
+        e.target.classList.remove("disable");
+        toast.dismiss(loadingToast);
+
+        return toast.error(response.data.error);
+      });
+  };
+
   return (
     <AnimationWrapper>
       <section className="w-screen min-h-screen grid items-center lg:grid-cols-2 py-16 lg:gap-4">
@@ -113,7 +180,9 @@ export default function PublishForm() {
           <p className="mt-1 mb-4 text-dark-grey text-sm text-right">
             {tagLimit - tags.length} tags left
           </p>
-          <button className="btn-dark px-8">Publish</button>
+          <button className="btn-dark px-8" onClick={handlePublishBlog}>
+            Publish
+          </button>
         </div>
       </section>
     </AnimationWrapper>
