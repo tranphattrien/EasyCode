@@ -37,7 +37,11 @@ export default function BlogPostCard({ content, author }) {
         </p>
 
         <div className="flex gap-4 mt-7 ">
-          <span className="btn-light py-1 px-4">{tags[0]}</span>
+          {tags.map((tag, i) => (
+            <span key={i} className="btn-light py-1 px-4">
+              {tag}
+            </span>
+          ))}
           <span className="ml-3 flex items-center gap-2 text-dark-grey">
             <i className="fi fi-rr-heart text-xl"></i>
             {total_likes}
