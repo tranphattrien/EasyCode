@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
-export let activeTabLineRef = useRef();
-export let activeTabRef = useRef();
+export let activeTabLineRef;
+export let activeTabRef;
 
 export default function InpageNavigation({
   routes,
