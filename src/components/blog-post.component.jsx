@@ -13,7 +13,7 @@ export default function BlogPostCard({ content, author }) {
   } = content;
 
   const { fullname, profile_img, username } = author;
-  console.log(content);
+
   return (
     <Link
       to={`/blog/${id}`}
@@ -36,7 +36,7 @@ export default function BlogPostCard({ content, author }) {
           {des}
         </p>
 
-        <div className="flex gap-4 mt-7 ">
+        <div className="flex gap-4 mt-7 flex-wrap">
           {tags.map((tag, i) => (
             <span key={i} className="btn-light py-1 px-4">
               {tag}
