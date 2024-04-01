@@ -8,6 +8,8 @@ import Loader from "../components/loader.component";
 import BlogPostCard from "../components/blog-post.component";
 import MinimalBlogPost from "../components/nobanner-blog-post.component";
 import NoDataMessage from "../components/nodata.component";
+import { filterPaginationData } from "../common/filter-pagination-data";
+import LoadMoreDataBtn from "../components/load-more.component";
 export default function HomePage() {
   const [blogs, setBlogs] = useState(null);
   const [trendingBlogs, setTrendingBlogs] = useState(null);
@@ -23,12 +25,19 @@ export default function HomePage() {
     "finances"
   ];
 
-  const fetchLatestBlogs = async () => {
+  const fetchLatestBlogs = async ({ page = 1 }) => {
     try {
-      const response = await axios.get(
-        import.meta.env.VITE_SERVER_DOMAIN + "/latest-blogs"
+      const response = await axios.post(
+        import.meta.env.VITE_SERVER_DOMAIN + "/latest-blogs",
+        { page }
       );
-      setBlogs(response.data.blogs);
+      let formatedData = await filterPaginationData({
+        state: blogs,
+        data: response.data.blogs,
+        page,
+        countRoute: "/all-latest-blogs-count"
+      });
+      setBlogs(formatedData);
     } catch (error) {
       console.log(error);
     }
@@ -45,13 +54,20 @@ export default function HomePage() {
     }
   };
 
-  const fetchBlogByCategory = async () => {
+  const fetchBlogByCategory = async ({ page = 1 }) => {
     try {
       const response = await axios.post(
         import.meta.env.VITE_SERVER_DOMAIN + "/search-blogs",
-        { tag: pageState }
+        { tag: pageState, page }
       );
-      setBlogs(response.data.blogs);
+      let formatedData = await filterPaginationData({
+        state: blogs,
+        data: response.data.blogs,
+        page,
+        countRoute: "/search-blogs-count",
+        data_to_send: { tag: pageState }
+      });
+      setBlogs(formatedData);
     } catch (error) {
       console.log(error);
     }
@@ -59,9 +75,9 @@ export default function HomePage() {
   useEffect(() => {
     activeTabRef.current.click();
     if (pageState == "home") {
-      fetchLatestBlogs();
+      fetchLatestBlogs({ page: 1 });
     } else {
-      fetchBlogByCategory();
+      fetchBlogByCategory({ page: 1 });
     }
     if (!trendingBlogs) {
       fetchTredingBlogs();
@@ -90,8 +106,8 @@ export default function HomePage() {
             <>
               {blogs == null ? (
                 <Loader />
-              ) : blogs.length ? (
-                blogs.map((blog, i) => {
+              ) : blogs.results.length ? (
+                blogs.results.map((blog, i) => {
                   return (
                     <AnimationWrapper
                       transition={{ duration: 1, delay: i * 0.1 }}
@@ -107,6 +123,12 @@ export default function HomePage() {
               ) : (
                 <NoDataMessage message="No blogs published !" />
               )}
+              <LoadMoreDataBtn
+                state={blogs}
+                fetchDataFunction={
+                  pageState == "home" ? fetchLatestBlogs : fetchBlogByCategory
+                }
+              />
             </>
 
             <>
