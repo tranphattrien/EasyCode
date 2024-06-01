@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/user-context";
 import UserNavigationPanel from "./user-navigation.component";
 
 export default function Navbar() {
+  const navigate = useNavigate();
   const [searchBoxVisibility, setSetBoxVisibility] = useState(false);
   const [userNavPanel, setUserNavPanel] = useState(false);
   const { userAuth } = useUserContext();
@@ -36,6 +37,13 @@ export default function Navbar() {
       document.removeEventListener("click", handleClickOutside);
     };
   }, [access_token]);
+
+  const handleSearch = (e) => {
+    let query = e.target.value;
+    if (e.keyCode == 13 && query.length) {
+      navigate(`/search/${query}`);
+    }
+  };
   return (
     <>
       <nav className="navbar">
@@ -80,6 +88,7 @@ export default function Navbar() {
             type="text"
             placeholder="Search"
             className=" w-full md:w-[200px] lg:w-auto bg-grey p-4 pl-6 pr-[12%] md:pr-6 md:pl-12 rounded-full placeholder:text-dark-grey outline-none"
+            onKeyDown={handleSearch}
           />
 
           <i className="fi fi-rr-search absolute right-[10%] md:pointer-events-none md:left-5 top-1/2 -translate-y-1/2 text-xl text-dark-grey"></i>
