@@ -6,7 +6,7 @@ import Quote from "@editorjs/quote";
 import Marker from "@editorjs/marker";
 import InlineCode from "@editorjs/inline-code";
 import { uploadImage } from "../common/upload_img";
-
+import CodeTool from "@rxpm/editor-js-code";
 const uploadImageByURL = async (e) => {
   let link = new Promise((resolve, reject) => {
     try {
@@ -58,5 +58,19 @@ export const tools = {
   },
   quote: { class: Quote, inlineToolbar: true },
   marker: Marker,
-  inlineCode: InlineCode
+  inlineCode: InlineCode,
+  code: {
+    class: CodeTool,
+    config: {
+      modes: {
+        js: "JavaScript",
+        py: "Python",
+        go: "Go",
+        cpp: "C++",
+        cs: "C#",
+        md: "Markdown"
+      },
+      default: "go"
+    }
+  }
 };
