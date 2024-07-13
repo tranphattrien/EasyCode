@@ -5,7 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 import Tag from "./tags.component";
 import axios from "axios";
 import { useUserContext } from "../../context/user-context";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function PublishForm() {
   const navigate = useNavigate();
@@ -13,6 +13,7 @@ export default function PublishForm() {
   const access_token = userAuth?.user?.access_token;
   const characterLimit = 200;
   const tagLimit = 10;
+  let { blog_id } = useParams();
   let {
     blog,
     blog: { banner, title, tags, des, content },
@@ -89,11 +90,15 @@ export default function PublishForm() {
     };
 
     axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + "/create-blog", blogObj, {
-        headers: {
-          Authorization: `Bearer ${access_token}`
+      .post(
+        import.meta.env.VITE_SERVER_DOMAIN + "/create-blog",
+        { ...blogObj, id: blog_id },
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`
+          }
         }
-      })
+      )
       .then(() => {
         e.target.classList.remove("disable");
         toast.dismiss(loadingToast);

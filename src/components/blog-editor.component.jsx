@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import AnimationWrapper from "../common/page-animation";
 import defaultBanner from "../Assets/imgs/blog banner.png";
 import { uploadImage } from "../common/upload_img";
@@ -22,12 +22,12 @@ export default function BlogEditor() {
     setTextEditor,
     setEditorState
   } = useEditorContext();
-
+  let { blog_id } = useParams();
   useEffect(() => {
     setTextEditor(
       new EditorJS({
         holder: "textEditor",
-        data: content,
+        data: Array.isArray(content) ? content[0] : content,
         tools: tools,
         placeholder: "Let's write an awesome story"
       })
@@ -103,7 +103,6 @@ export default function BlogEditor() {
 
     if (textEditor.isReady) {
       textEditor.save().then((content) => {
-        
         let blogObj = {
           title,
           banner,
@@ -114,11 +113,15 @@ export default function BlogEditor() {
         };
 
         axios
-          .post(import.meta.env.VITE_SERVER_DOMAIN + "/create-blog", blogObj, {
-            headers: {
-              Authorization: `Bearer ${access_token}`
+          .post(
+            import.meta.env.VITE_SERVER_DOMAIN + "/create-blog",
+            { ...blogObj, id: blog_id },
+            {
+              headers: {
+                Authorization: `Bearer ${access_token}`
+              }
             }
-          })
+          )
           .then(() => {
             e.target.classList.remove("disable");
             toast.dismiss(loadingToast);
