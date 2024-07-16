@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useBlogContext } from "../pages/blog";
 import { Link } from "react-router-dom";
 import { useUserContext } from "../../context/user-context";
+import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
 
 export default function BlogInteraction() {
   let {
+    blog,
     blog: {
+      _id,
       title,
       blog_id,
       activity,
@@ -14,21 +18,84 @@ export default function BlogInteraction() {
         personal_info: { username: author_username }
       }
     },
-    setBlog
+    setBlog,
+    islikedByUser,
+    setLikedByUser
   } = useBlogContext();
   let {
     userAuth: {
-      user: { username }
+      user: { username, access_token }
     }
   } = useUserContext();
 
+  useEffect(() => {
+    if (access_token) {
+      axios
+        .post(
+          import.meta.env.VITE_SERVER_DOMAIN + "/isliked-by-user",
+          { _id },
+          {
+            headers: {
+              Authorization: `Bearer ${access_token}`
+            }
+          }
+        )
+        .then(({ data: { result } }) => {
+          setLikedByUser(Boolean(result));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, []);
+  const handleLike = () => {
+    if (access_token) {
+      setLikedByUser((preVal) => !preVal);
+      !islikedByUser ? total_likes++ : total_likes--;
+
+      setBlog({ ...blog, activity: { ...activity, total_likes } });
+
+      axios
+        .post(
+          import.meta.env.VITE_SERVER_DOMAIN + "/like-blog",
+          {
+            _id,
+            islikedByUser
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${access_token}`
+            }
+          }
+        )
+        .then(({ data }) => {
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      toast.error("Please Sign In to like this blog !");
+    }
+  };
   return (
     <>
+      <Toaster />
       <hr className="border-grey my-2" />
       <div className="flex gap-6 justify-between">
         <div className="flex gap-3 items-center">
-          <button className="w-10 h-10 rounded-full flex items-center justify-center bg-grey/80">
-            <i className="fi fi-rr-heart"></i>
+          <button
+            className={
+              "w-10 h-10 rounded-full flex items-center justify-center bg-grey/80 " +
+              (islikedByUser ? "bg-red/20 text-red" : " bg-grey/80")
+            }
+            onClick={handleLike}
+          >
+            <i
+              className={
+                "fi " + (!islikedByUser ? "fi-rr-heart" : "fi-sr-heart")
+              }
+            />
           </button>
           <p className="text-xl text-dark-grey">{total_likes}</p>
 

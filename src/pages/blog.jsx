@@ -23,6 +23,7 @@ export default function BlogPage() {
   const [blog, setBlog] = useState(blogStructure);
   const [similarBlogs, setSimilarBlogs] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [islikedByUser, setLikedByUser] = useState(false);
   let {
     title,
     content,
@@ -71,7 +72,9 @@ export default function BlogPage() {
       {loading ? (
         <Loader />
       ) : (
-        <BlogContext.Provider value={{ blog, setBlog }}>
+        <BlogContext.Provider
+          value={{ blog, setBlog, islikedByUser, setLikedByUser }}
+        >
           <div className="max-w-[900px] center py-10 max-lg:px-[5vw]">
             <img src={banner} className="aspect-video" alt="Banner of blog" />
             <div className="mt-12">
