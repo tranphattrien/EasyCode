@@ -20,7 +20,12 @@ export default function BlogInteraction() {
     },
     setBlog,
     islikedByUser,
-    setLikedByUser
+    setLikedByUser,
+    commentsWrapper,
+    setCommentWrapper,
+    totalParentCommentsLoaded,
+    setTotalParentCommentsLoaded,
+    handleShowComment
   } = useBlogContext();
   let {
     userAuth: {
@@ -75,9 +80,10 @@ export default function BlogInteraction() {
           console.log(err);
         });
     } else {
-      toast.error("Please Sign In to like this blog !");
+      toast.error("Please sign in to like this blog !");
     }
   };
+
   return (
     <>
       <Toaster />
@@ -99,7 +105,10 @@ export default function BlogInteraction() {
           </button>
           <p className="text-xl text-dark-grey">{total_likes}</p>
 
-          <button className="w-10 h-10 rounded-full flex items-center justify-center bg-grey/80">
+          <button
+            className="w-10 h-10 rounded-full flex items-center justify-center bg-grey/80"
+            onClick={handleShowComment}
+          >
             <i className="fi fi-rr-comment-dots"></i>
           </button>
           <p className="text-xl text-dark-grey">{total_comments}</p>

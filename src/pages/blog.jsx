@@ -7,6 +7,9 @@ import { getDay } from "../common/date";
 import BlogInteraction from "../components/blog-interaction.component";
 import BlogPostCard from "../components/blog-post.component";
 import BlogContent from "../components/blog-content.component";
+import CommentContainer, {
+  fetchComments
+} from "../components/comments.component";
 export const blogStructure = {
   title: "",
   des: "",
@@ -24,6 +27,8 @@ export default function BlogPage() {
   const [similarBlogs, setSimilarBlogs] = useState(null);
   const [loading, setLoading] = useState(true);
   const [islikedByUser, setLikedByUser] = useState(false);
+  const [commentsWrapper, setCommentWrapper] = useState(false);
+  const [totalParentCommentsLoaded, setTotalParentCommentsLoaded] = useState(0);
   let {
     title,
     content,
@@ -39,7 +44,14 @@ export default function BlogPage() {
       .post(import.meta.env.VITE_SERVER_DOMAIN + "/get-blog", {
         blog_id
       })
-      .then(({ data: { blog } }) => {
+      .then(async ({ data: { blog } }) => {
+        blog.comments = await fetchComments({
+          blog_id: blog._id,
+          setParentCommentCountFun: setTotalParentCommentsLoaded
+        });
+
+        setBlog(blog);
+
         axios
           .post(import.meta.env.VITE_SERVER_DOMAIN + "/search-blogs", {
             tag: blog.tags[0],
@@ -49,7 +61,6 @@ export default function BlogPage() {
           .then(({ data }) => {
             setSimilarBlogs(data.blogs);
           });
-        setBlog(blog);
         setLoading(false);
       })
       .catch((err) => {
@@ -66,6 +77,12 @@ export default function BlogPage() {
     setBlog(blogStructure);
     setSimilarBlogs(null);
     setLoading(true);
+    setLikedByUser(false);
+    setCommentWrapper(false);
+    setTotalParentCommentsLoaded(0);
+  };
+  const handleShowComment = () => {
+    setCommentWrapper((preVal) => !preVal);
   };
   return (
     <AnimationWrapper>
@@ -73,8 +90,19 @@ export default function BlogPage() {
         <Loader />
       ) : (
         <BlogContext.Provider
-          value={{ blog, setBlog, islikedByUser, setLikedByUser }}
+          value={{
+            blog,
+            setBlog,
+            islikedByUser,
+            setLikedByUser,
+            commentsWrapper,
+            setCommentWrapper,
+            totalParentCommentsLoaded,
+            setTotalParentCommentsLoaded,
+            handleShowComment
+          }}
         >
+          <CommentContainer />
           <div className="max-w-[900px] center py-10 max-lg:px-[5vw]">
             <img src={banner} className="aspect-video" alt="Banner of blog" />
             <div className="mt-12">

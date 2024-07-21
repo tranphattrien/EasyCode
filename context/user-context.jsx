@@ -10,7 +10,7 @@ export default function UserContextProvider({ children }) {
     const userInSession = lookInSession("user");
     userInSession
       ? setUserAuth(JSON.parse(userInSession))
-      : setUserAuth({ user: { access_token: null } });
+      : setUserAuth({ user: { access_token: null, username: null } });
   }, []);
 
   return (

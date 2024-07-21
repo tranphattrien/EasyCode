@@ -14,7 +14,8 @@ export default function UserNavigationPanel() {
 
   const signOutUser = () => {
     removeFromSession("user");
-    setUserAuth({ access_token: null });
+    setUserAuth({ access_token: null, username: null });
+    window.location.reload();
   };
 
   return (
