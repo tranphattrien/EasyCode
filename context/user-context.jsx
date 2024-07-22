@@ -4,7 +4,9 @@ import { lookInSession } from "../src/common/session";
 const UserContext = createContext();
 
 export default function UserContextProvider({ children }) {
-  const [userAuth, setUserAuth] = useState({});
+  const [userAuth, setUserAuth] = useState({
+    user: { access_token: null, username: null }
+  });
 
   useEffect(() => {
     const userInSession = lookInSession("user");

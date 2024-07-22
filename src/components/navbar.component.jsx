@@ -46,7 +46,7 @@ export default function Navbar() {
   };
   return (
     <>
-      <nav className="navbar">
+      <nav className="navbar z-50">
         <Link to="/" className="flex-none">
           <svg
             xmlns="http://www.w3.org/2000/svg"
