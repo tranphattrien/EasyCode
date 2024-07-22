@@ -11,6 +11,7 @@ import ProfilePage from "./pages/profile";
 import BlogPage from "./pages/blog";
 import SideNav from "./components/sidenavbar.component";
 import ChangePassword from "./pages/change-password";
+import EditProfile from "./pages/edit-profile";
 
 const App = () => {
   return (
@@ -20,7 +21,7 @@ const App = () => {
           <Route index element={<HomePage />} />
 
           <Route path="settings" element={<SideNav />}>
-            <Route path="edit-profile" element={<h1>Edit profile</h1>} />
+            <Route path="edit-profile" element={<EditProfile />} />
             <Route path="change-password" element={<ChangePassword />} />
           </Route>
 

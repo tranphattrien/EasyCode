@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 
-export default function InputBox({ name, type, id, value, placeholder, icon }) {
+export default function InputBox({
+  name,
+  type,
+  id,
+  value,
+  placeholder,
+  icon,
+  disable
+}) {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const handlePasswordVisible = () => {
     setPasswordVisible((currentVal) => !currentVal);
@@ -16,6 +24,7 @@ export default function InputBox({ name, type, id, value, placeholder, icon }) {
         placeholder={placeholder}
         defaultValue={value}
         id={id}
+        disabled={disable}
       />
       <i className={"fi " + icon + " input-icon"}></i>
 

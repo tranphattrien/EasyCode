@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Navigate, NavLink, Outlet } from "react-router-dom";
+import { Navigate, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useUserContext } from "../../context/user-context";
 
 export default function SideNav() {
@@ -8,6 +8,7 @@ export default function SideNav() {
       user: { access_token }
     }
   } = useUserContext();
+  let location = useLocation();
   let page = location.pathname.split("/")[2];
   let [pageState, setPageState] = useState(page.replace("-", " "));
   let [showSideNav, setShowSideNav] = useState(false);
@@ -21,7 +22,7 @@ export default function SideNav() {
     activeTabLine.current.style.width = offsetWidth + "px";
     activeTabLine.current.style.left = offsetLeft + "px";
 
-    if (e.target == sideBarIconTab.current) {
+    if (e.target === sideBarIconTab.current) {
       setShowSideNav(true);
     } else {
       setShowSideNav(false);
@@ -30,11 +31,15 @@ export default function SideNav() {
 
   useEffect(() => {
     setShowSideNav(false);
-    pageStateTab.current.click();
+    if (pageStateTab.current) {
+      pageStateTab.current.click();
+    }
   }, [pageState]);
-  return access_token === null || !access_token ? (
-    <Navigate to="/signin" />
-  ) : (
+
+  if (access_token === null || !access_token) {
+    return <Navigate to="/signin" />;
+  }
+  return (
     <>
       <section className="relative flex gap-10 py-10 m-0 max-md:flex-col">
         <div className="sticky top-[80px] z-30">

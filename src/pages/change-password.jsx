@@ -7,7 +7,7 @@ import axios from "axios";
 export default function ChangePassword() {
   let {
     userAuth: {
-      user: { username, fullname, profile_img, access_token }
+      user: { access_token }
     }
   } = useUserContext();
   let changePasswordForm = useRef();
