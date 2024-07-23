@@ -42,7 +42,7 @@ const Activation = () => {
   useEffect(() => {
     const activateAccount = async () => {
       try {
-        await axios.post(`http://localhost:3000/activation`, {
+        await axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/activation", {
           activation_token: activation_token
         });
         setLoading(false);
