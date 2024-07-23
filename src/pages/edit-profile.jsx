@@ -157,16 +157,17 @@ export default function EditProfile() {
       )
       .then(({ data }) => {
         console.log(data.username);
-        if (username !== data.username) {
-          let updatedUser = {
-            ...userAuth,
-            user: {
-              username: data.username
-            }
-          };
-          storeInSession("user", JSON.stringify(updatedUser));
-          setUserAuth(updatedUser);
-        }
+        // if (username != data.username) {
+        let updatedUser = {
+          ...userAuth,
+          user: {
+            ...userAuth.user,
+            username: data.username
+          }
+        };
+        storeInSession("user", JSON.stringify(updatedUser));
+        setUserAuth(updatedUser);
+        // }
         console.log(userAuth);
         toast.dismiss(loadingToast);
         e.target.removeAttribute("disabled");
